@@ -1,0 +1,62 @@
+name: .NET Core Build and Test
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+          - 1433:1433
+        env:
+          SA_PASSWORD: ${{ secrets.db_password }}
+          ACCEPT_EULA: Y
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.0'
+      
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+    
+      - name: Create and Push ASP.NET Web API Docker Image
+        run: |
+          container_id=$(docker ps -q --filter "ancestor=project-webapi")
+
+          docker commit $container_id project-webapi:latest
+
+          docker tag project-webapi:latest aaa9758/project-webapi:latest
+          docker push aaa9758/project-webapi:latest
+
+      - name: Build and Push xUnit Test Docker image
+        run: |
+          docker build -t project-tests:latest -f Dockerfile.Tests .
+          docker tag project-tests:latest aaa9758/project-tests:latest
+          docker push aaa9758/project-tests:latest
