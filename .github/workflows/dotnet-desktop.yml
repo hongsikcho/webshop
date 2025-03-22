@@ -34,7 +34,7 @@ jobs:
             
       - name: Run Docker Compose
         env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}  # 🔹 환경 변수 전달
+          db_password: ${{ secrets.db_password }}  # 🔹 환경 변수 전달
         run: |
           docker-compose up -d
 
