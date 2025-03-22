@@ -51,7 +51,26 @@ jobs:
     
       - name: Create and Push ASP.NET Web API Docker Image
         run: |
-          container_id=$(docker ps -q --filter "ancestor=project-webapi:latest")
+          container_id=$(docker ps -q --filter "ancestor=project-webshop")
+
+          container_id=$(docker ps -q --filter "name=webshop")
+
+          if [ -z "$container_id" ]; then
+            echo "⚠ No running webshop container found. Trying to start one..."
+            docker-compose up -d webshop
+            sleep 10
+            container_id=$(docker ps -q --filter "name=webshop")
+
+            if [ -z "$container_id" ]; then
+              echo "❌ Still no running webshop container. Exiting..."
+              exit 1
+            fi
+          fi
+
+          docker commit $container_id project-webapi:latest
+          docker tag project-webapi:latest ***/project-webapi:latest
+          docker push ***/project-webapi:latest
+
           
           docker commit $container_id project-webapi:latest
           docker tag project-webapi:latest aaa9758/project-webapi:latest
