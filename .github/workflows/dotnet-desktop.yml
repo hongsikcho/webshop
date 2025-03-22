@@ -51,12 +51,7 @@ jobs:
     
       - name: Create and Push ASP.NET Web API Docker Image
         run: |
-          container_id=$(docker ps -q --filter "ancestor=project-webapi")
-          
-          if [ -z "$container_id" ]; then
-            echo "No running project-webapi container found. Exiting..."
-            exit 1
-          fi
+          container_id=$(docker ps -q --filter "ancestor=webshop")
           
           docker commit $container_id project-webapi:latest
           docker tag project-webapi:latest aaa9758/project-webapi:latest
@@ -64,6 +59,8 @@ jobs:
 
       - name: Build and Push xUnit Test Docker image
         run: |
-          docker build -t project-tests:latest -f Dockerfile.Tests .
+          test_container_id=$(docker ps -q --filter "ancestor=webshopTest")
+
+          docker commit $test_container_id project-tests:latest
           docker tag project-tests:latest aaa9758/project-tests:latest
           docker push aaa9758/project-tests:latest
