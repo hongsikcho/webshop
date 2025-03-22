@@ -19,7 +19,7 @@ jobs:
         ports:
           - 1433:1433
         env:
-          SA_PASSWORD: ${{ secrets.db_password }}
+          SA_PASSWORD: ${{ secrets.DB_PASSWORD }}
           ACCEPT_EULA: Y
 
     steps:
@@ -31,10 +31,13 @@ jobs:
         run: |
             sudo apt-get update
             sudo apt-get install -y docker-compose
+            
       - name: Run Docker Compose
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}  # 🔹 환경 변수 전달
         run: |
-          dbpassword=${{ secrets.db_password }} docker-compose up -d
-          
+          docker-compose up -d
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v2
         with:
@@ -42,15 +45,15 @@ jobs:
       
       - name: Restore dependencies
         run: dotnet restore
-        working-directory: ./webshop  # 프로젝트 폴더 지정
+        working-directory: ./webshop  
 
       - name: Build
         run: dotnet build --configuration Release
-        working-directory: ./webshop  # 프로젝트 폴더 지정
+        working-directory: ./webshop  
 
       - name: Test
         run: dotnet test --no-restore --verbosity normal
-        working-directory: ./webshop  # 프로젝트 폴더 지정
+        working-directory: ./webshop  
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -75,11 +78,6 @@ jobs:
           fi
 
           docker commit $container_id project-webapi:latest
-          docker tag project-webapi:latest ***/project-webapi:latest
-          docker push ***/project-webapi:latest
-
-          
-          docker commit $container_id project-webapi:latest
           docker tag project-webapi:latest aaa9758/project-webapi:latest
           docker push aaa9758/project-webapi:latest
 
@@ -88,16 +86,15 @@ jobs:
           test_container_id=$(docker ps -q --filter "name=webshopTest")
 
           if [ -z "$test_container_id" ]; then
-          echo "⚠ No running webshopTest container found. Trying to start one..."
-          cd webshop
-          docker compose --env-file .env up -d tests
-          sleep 10
-          test_container_id=$(docker ps -q --filter "name=webshopTest")
+            echo "⚠ No running webshopTest container found. Trying to start one..."
+            docker-compose up -d tests
+            sleep 10
+            test_container_id=$(docker ps -q --filter "name=webshopTest")
 
-          if [ -z "$test_container_id" ]; then
-            echo "❌ Still no running webshopTest container. Exiting..."
-            exit 1
-          fi
+            if [ -z "$test_container_id" ]; then
+              echo "❌ Still no running webshopTest container. Exiting..."
+              exit 1
+            fi
           fi
 
           docker commit $test_container_id project-tests:latest
