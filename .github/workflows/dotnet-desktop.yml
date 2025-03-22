@@ -23,6 +23,10 @@ jobs:
           ACCEPT_EULA: Y
 
     steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2  # 👉 GitHub에서 코드 가져오기
+
       - name: Install Docker Compose
         run: |
             sudo apt-get update
