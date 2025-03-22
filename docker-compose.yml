@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: webshop.Tests/Dockerfile
     container_name: webshopTest
-      environment:
+    environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDatabase;User Id=sa;Password=${db_password};
     depends_on:
