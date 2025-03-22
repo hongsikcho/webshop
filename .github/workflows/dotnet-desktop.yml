@@ -53,7 +53,7 @@ jobs:
 
       - name: Test
         run: dotnet test --no-restore --verbosity normal
-        working-directory: ./webshop  
+        working-directory: ./webshop.Tests
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -80,23 +80,3 @@ jobs:
           docker commit $container_id project-webapi:latest
           docker tag project-webapi:latest aaa9758/project-webapi:latest
           docker push aaa9758/project-webapi:latest
-
-      - name: Build and Push xUnit Test Docker image
-        run: |
-          test_container_id=$(docker ps -q --filter "name=webshopTest")
-
-          if [ -z "$test_container_id" ]; then
-            echo "⚠ No running webshopTest container found. Trying to start one..."
-            docker-compose up -d tests
-            sleep 10
-            test_container_id=$(docker ps -q --filter "name=webshopTest")
-
-            if [ -z "$test_container_id" ]; then
-              echo "❌ Still no running webshopTest container. Exiting..."
-              exit 1
-            fi
-          fi
-
-          docker commit $test_container_id project-tests:latest
-          docker tag project-tests:latest aaa9758/project-tests:latest
-          docker push aaa9758/project-tests:latest
