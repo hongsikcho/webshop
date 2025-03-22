@@ -23,6 +23,11 @@ jobs:
           ACCEPT_EULA: Y
 
     steps:
+      - name: Install Docker Compose
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y docker-compose
+            
       - name: Checkout code
         uses: actions/checkout@v2 
 
