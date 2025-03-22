@@ -30,7 +30,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> webshop/.env
+          echo "DB_PASSWORD=${{ secrets.db_password }}" >> webshop/.env
             
       - name: Checkout code
         uses: actions/checkout@v2 
