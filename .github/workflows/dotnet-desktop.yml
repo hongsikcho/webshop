@@ -87,7 +87,20 @@ jobs:
 
       - name: Build and Push xUnit Test Docker image
         run: |
-          test_container_id=$(docker ps -q --filter "ancestor=project-tests:latest")
+          test_container_id=$(docker ps -q --filter "name=webshopTest")
+
+          if [ -z "$test_container_id" ]; then
+          echo "⚠ No running webshopTest container found. Trying to start one..."
+          cd webshop
+          docker compose --env-file .env up -d tests
+          sleep 10
+          test_container_id=$(docker ps -q --filter "name=webshopTest")
+
+          if [ -z "$test_container_id" ]; then
+            echo "❌ Still no running webshopTest container. Exiting..."
+            exit 1
+          fi
+          fi
 
           docker commit $test_container_id project-tests:latest
           docker tag project-tests:latest aaa9758/project-tests:latest
