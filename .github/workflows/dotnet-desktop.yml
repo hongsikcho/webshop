@@ -31,7 +31,11 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p webshop  # webshop 디렉토리 생성
-          echo "DB_PASSWORD=${{ secrets.db_password }}" >> webshop/.env
+          echo "db_password=${{ secrets.db_password }}" >> webshop/.env
+
+      - name: Check .env file existence
+        run: |
+          ls -l webshop  # webshop 디렉토리 내의 파일 목록 출력
 
             
       - name: Checkout code
