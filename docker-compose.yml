@@ -1,0 +1,39 @@
+services:
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "Sksmswkd1!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - webshopNetwork
+
+  webapi:
+    build:
+      context: .
+      dockerfile: webshop/Dockerfile
+    container_name: webshop
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDatabase;User Id=sa;Password=${DB_PASSWORD};
+    depends_on:
+      - sqlserver
+    ports:
+      - "5000:80"
+    networks:
+      - webshopNetwork
+
+  tests:
+    build:
+      context: .
+      dockerfile: webshop.Tests/Dockerfile
+    container_name: webshopTest
+    depends_on:
+      - webapi
+    networks:
+      - webshopNetwork
+
+networks:
+  webshopNetwork:
