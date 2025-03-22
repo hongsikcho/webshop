@@ -31,28 +31,10 @@ jobs:
         run: |
             sudo apt-get update
             sudo apt-get install -y docker-compose
-      - name: Check existing folders
-        run: ls -al
-
-      - name: Create .env file
+      - name: Run Docker Compose
         run: |
-          touch .env
-          echo "db_password=${{ secrets.db_password }}" > webshop/.env  # 명확한 경로
-
-      - name: Check .env file
-        run: ls -al webshop  # 👉 webshop 폴더 안의 파일 목록 확인
-
-
-      - name: Check current directory
-        run: pwd  # 현재 작업 디렉토리 출력
-
-      - name: List directory structure
-        run: ls -R  # 모든 파일과 디렉토리 목록 출력
-
-      - name: Check .env file contents
-        run: cat webshop/.env  # .env 파일이 올바르게 생성되었는지 확인
-
-
+          dbpassword=${{ secrets.db_password }} docker-compose up -d
+          
       - name: Set up .NET
         uses: actions/setup-dotnet@v2
         with:
