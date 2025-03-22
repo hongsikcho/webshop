@@ -27,6 +27,8 @@ jobs:
         run: |
             sudo apt-get update
             sudo apt-get install -y docker-compose
+      - name: Check existing folders
+        run: ls -al
 
       - name: Create .env file
         run: |
