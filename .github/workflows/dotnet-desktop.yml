@@ -49,8 +49,9 @@ jobs:
       - name: List directory structure
         run: ls -R  # 모든 파일과 디렉토리 목록 출력
 
-      - name: Checkout code
-        uses: actions/checkout@v2 
+      - name: Check .env file contents
+        run: cat webshop/.env  # .env 파일이 올바르게 생성되었는지 확인
+
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v2
