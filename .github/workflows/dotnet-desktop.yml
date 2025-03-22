@@ -67,8 +67,6 @@ jobs:
     
       - name: Create and Push ASP.NET Web API Docker Image
         run: |
-          container_id=$(docker ps -q --filter "ancestor=webshop")
-
           container_id=$(docker ps -q --filter "name=webshop")
 
           if [ -z "$container_id" ]; then
