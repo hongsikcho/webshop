@@ -25,7 +25,7 @@ services:
     networks:
       - webshopNetwork
     env_file:
-      - ../../.env
+      - ../.env
 
   tests:
     build:
