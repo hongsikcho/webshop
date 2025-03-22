@@ -31,7 +31,7 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p webshop  # webshop 디렉토리 생성
-          echo "db_password=${{ secrets.db_password }}" >> webshop/.env
+          echo "db_password=${{ secrets.db_password }}" >> .env
 
       - name: Check .env file existence
         run: |
@@ -66,7 +66,7 @@ jobs:
     
       - name: Create and Push ASP.NET Web API Docker Image
         run: |
-          container_id=$(docker ps -q --filter "ancestor=project-webshop")
+          container_id=$(docker ps -q --filter "ancestor=webshop")
 
           container_id=$(docker ps -q --filter "name=webshop")
 
