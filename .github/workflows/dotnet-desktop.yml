@@ -31,7 +31,7 @@ jobs:
       - name: Create .env file
         run: |
           mkdir -p webshop  # webshop 디렉토리 생성
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > ./webshop/.env  # 명확한 경로
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" > ./.env  # 명확한 경로
 
       - name: Check current directory
         run: pwd  # 현재 작업 디렉토리 출력
