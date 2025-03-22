@@ -24,8 +24,6 @@ services:
       - "5000:80"
     networks:
       - webshopNetwork
-    env_file:
-      - webshop/.env
 
   tests:
     build:
