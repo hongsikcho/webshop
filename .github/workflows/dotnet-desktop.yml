@@ -36,6 +36,7 @@ jobs:
 
       - name: Create .env file
         run: |
+          touch .env
           echo "db_password=${{ secrets.db_password }}" > webshop/.env  # 명확한 경로
 
       - name: Check .env file
