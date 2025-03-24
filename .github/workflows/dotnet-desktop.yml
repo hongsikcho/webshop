@@ -24,7 +24,7 @@ jobs:
             
       - name: Run Docker Compose
         env:
-          db_password: ${{ secrets.db_password }}
+          DB_PASSWORD: ${{ secrets.db_password }}
         run: |
           docker-compose up -d
 
