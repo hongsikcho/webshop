@@ -13,19 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      sqlserver:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        ports:
-          - 1435:1433
-        env:
-          SA_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          ACCEPT_EULA: Y
-
     steps:
-
       - name: Checkout code
-        uses: actions/checkout@v2  # 👉 GitHub에서 코드 가져오기
+        uses: actions/checkout@v2 
 
       - name: Install Docker Compose
         run: |
@@ -34,7 +24,7 @@ jobs:
             
       - name: Run Docker Compose
         env:
-          db_password: ${{ secrets.db_password }}  # 🔹 환경 변수 전달
+          db_password: ${{ secrets.db_password }}
         run: |
           docker-compose up -d
 
