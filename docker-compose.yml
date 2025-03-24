@@ -17,15 +17,13 @@ services:
     container_name: webshop
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDatabase;User Id=sa;Password=${DB_PASSWORD};
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDatabase;User Id=sa;Password=Sksmswkd1!;
     depends_on:
       - sqlserver
     ports:
       - "5000:80"
     networks:
       - webshopNetwork
-    env_file:
-      - .env 
 
   tests:
     build:
